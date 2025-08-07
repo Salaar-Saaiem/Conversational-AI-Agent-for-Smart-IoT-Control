@@ -3,5 +3,5 @@ import os
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv("8462744022:AAGCvQV5m0xc3WJpAiU1VpxcVOwoXMrNI3o")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
