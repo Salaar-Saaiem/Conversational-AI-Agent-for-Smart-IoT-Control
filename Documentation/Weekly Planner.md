@@ -1,6 +1,6 @@
-# 🗓️ AI-Based IoT Agent Suite — Development Plan
+# 🧱 Production-Grade Weekly Plan — AI-Based IoT Agent Suite
 
-This document outlines the 6-week development roadmap to build a fully working, chat-based AI agent that can control, monitor, and optionally predict IoT device behavior via natural language.
+This 7-week roadmap covers everything needed to build, test, and deploy a production-level AI-powered IoT assistant that works via Telegram and integrates with MQTT-controlled devices.
 
 ---
 
@@ -8,122 +8,145 @@ This document outlines the 6-week development roadmap to build a fully working, 
 
 | Week | Focus Area | Goals |
 |------|------------|-------|
-| 1 | 🧠 AI Basics + Bot Setup | Understand AI agent concepts + build Telegram bot + FastAPI |
-| 2 | 🧠 LLM Integration + Intent Parsing | Connect OpenAI + parse natural language commands |
-| 3 | 🔌 IoT Communication (MQTT) | Connect to device data (fake or real) via MQTT |
-| 4 | 📡 Real-Time Monitoring Agent | Fetch & return sensor data via chat |
-| 5 | 🧠 Rules + Condition Logic | Implement "if humidity > 70, turn off fan" logic |
-| 6 | 🧪 Predictive Model (Optional) + Polish | Add failure prediction model + polish code, docs, and demo |
+| 1 | Telegram Webhook Bot | Setup bot with FastAPI and proper architecture |
+| 2 | LLM + Prompt Parsing | Integrate OpenAI to parse commands into JSON |
+| 3 | MQTT + Device Sim | Connect MQTT broker + mock device communication |
+| 4 | Real-Time Monitoring | Query live device values via chat |
+| 5 | Rule Engine | Trigger actions based on conditions like `if temp > 35` |
+| 6 | Predictive Maintenance (Optional) | Forecast failures based on sensor history |
+| 7 | CI/CD + Deploy + Monitor | Full production deployment and testing |
 
 ---
 
-## WEEKLY PLAN (DETAILED)
+## 🧠 Week 1: Telegram Webhook Bot
 
-### Week 1: 🧠 AI Agent + Bot Fundamentals
-**Goal**: Understand how chat-based AI agents work and set up a basic bot pipeline.
+**🎯 Goal:** Build a webhook-based Telegram bot with FastAPI and a modular backend.
 
-- [ ] Learn what an AI agent is (reactive, goal-based, utility-based)
-- [ ] Set up GitHub project and folder structure
-- [ ] Create Telegram bot using BotFather
-- [ ] Write Python backend using FastAPI
-- [ ] Connect Telegram → FastAPI via webhook or polling
-- [ ] Echo dummy messages
+### Tasks
+- [ ] Set up FastAPI project structure
+- [ ] Register Telegram bot via [@BotFather](https://t.me/botfather)
+- [ ] Connect Telegram bot via **webhook**, not polling
+- [ ] Load secrets using `.env`
+- [ ] Create proper folder structure: `bot/`, `core/`, `api/`, `config/`
+- [ ] Add basic `Dockerfile` and `.dockerignore`
+- [ ] Setup `logging` or `loguru` for structured logs
 
-**Deliverable**: You can chat with your bot and receive replies.
-
----
-
-### Week 2: 🧠 OpenAI Integration + Prompt Parsing
-**Goal**: Make the bot smart using LLMs to understand natural language.
-
-- [ ] Learn prompt engineering basics
-- [ ] Connect OpenAI GPT-4 (or GPT-3.5) via API
-- [ ] Parse user messages:
-  - Intent (monitor, control)
-  - Device (fan, light, pump)
-  - Conditions (e.g., if humidity > 70)
-- [ ] Create a prompt parser that returns structured JSON
-- [ ] Handle errors and fallbacks
-
-**Deliverable**:  
-Example → `"Turn off the fan if temp > 30"`  
-Parsed JSON → `{ action: "off", device: "fan", condition: "temp > 30" }`
+### Deliverable
+Send message to Telegram bot → FastAPI route receives it → custom reply
 
 ---
 
-### Week 3: 🔌 MQTT + IoT Communication
-**Goal**: Build the communication bridge to your IoT devices.
+## 🤖 Week 2: LLM + Prompt Parsing
 
-- [ ] Learn MQTT basics: broker, topic, publish/subscribe
-- [ ] Set up Mosquitto broker locally or via Docker
-- [ ] Write MQTT handler to:
-  - Subscribe to sensors (`temp`, `humidity`)
-  - Publish control commands
-- [ ] Create mock device script to simulate sensor readings
+**🎯 Goal:** Convert natural language into actionable commands using GPT.
 
-**Deliverable**: Chat command triggers action + simulated sensor sends data.
+### Tasks
+- [ ] Connect OpenAI GPT-4 or GPT-3.5
+- [ ] Build a clean `PromptParser` module
+- [ ] Design few-shot or structured prompts
+- [ ] Extract intent, device, action, condition
+- [ ] Log prompts and responses
+- [ ] Write unit tests for parsing
 
----
-
-### Week 4: 📡 Real-Time Monitoring Agent
-**Goal**: Let users ask for sensor values through chat.
-
-- [ ] Store latest MQTT values in memory or DB
-- [ ] On query like "What's the temperature?" → fetch latest value
-- [ ] Handle variations like “How hot is it in Zone A?”
-- [ ] Return clean, conversational responses
-
-**Deliverable**: Bot replies with live device data on demand.
+### Deliverable
+Parse example:
+{ "action": "turn_off", "device": "fan", "condition": { "parameter": "humidity", "operator": ">", "value": 70 } }
 
 ---
 
-### Week 5: 🧠 Add Rule Engine + Logic
-**Goal**: Allow dynamic rules like:
-> “Turn on pump if temperature < 25 and humidity > 60”
+## 📡 Week 3: MQTT Integration + Device Simulation
 
-- [ ] Store rule JSON in DB
-- [ ] Match conditions in real-time as MQTT data flows in
-- [ ] Trigger control commands when rule matches
-- [ ] Log all actions and responses
+**🎯 Goal:** Connect to a real MQTT broker and simulate devices.
 
-**Deliverable**: Your bot enforces smart, user-defined rules.
+### Tasks
+- [ ] Use `paho-mqtt` to connect, publish, subscribe
+- [ ] Run Mosquitto via Docker
+- [ ] Build `mqtt_handler.py` with reconnects and error logging
+- [ ] Write a fake device simulator that sends random sensor data
+- [ ] Create real-time logs of MQTT traffic
 
----
-
-### Week 6: 🧪 Predictive Maintenance + Final Polish
-**Goal**: Add optional intelligence layer + polish everything.
-
-- [ ] Train a model on logs (Prophet, LSTM)
-- [ ] Predict future values or detect anomalies
-- [ ] Add alert system: “Compressor may fail in 10 days”
-- [ ] Finalize UI, diagrams, README, and testing
-- [ ] Record demo video (if needed)
-
-**Deliverable**: Full-stack system with AI, IoT, logic, chat, and prediction.
+### Deliverable
+Chat command → control message via MQTT → device responds (mocked)
 
 ---
 
-## 🛠️ Suggested Team Roles
+## 📊 Week 4: Real-Time Monitoring Agent
 
-| Role | Responsibility |
-|------|----------------|
-| 🧠 You | OpenAI integration, intent parser, rule logic |
-| 🔌 Teammate 1 | MQTT comms, sensor simulation, control logic |
-| 💬 Teammate 2 | Telegram bot setup, testing |
-| 🧪 Teammate 3 | Predictive model, failure alerts |
-| 🧱 Shared | DB design, documentation, UI, final QA |
+**🎯 Goal:** Ask the bot for live sensor values.
 
----
+### Tasks
+- [ ] Store latest values in Redis or memory cache
+- [ ] Query handlers: “What’s the temp in Zone B?”
+- [ ] Sanitize and standardize sensor names
+- [ ] Format clean replies (units, location, etc.)
+- [ ] Add error handling and fallbacks
 
-## 🎯 By the End, You’ll Know:
-
-- How to build a conversational AI agent from scratch
-- How to use OpenAI and prompt parsing effectively
-- How to work with MQTT and device control
-- How to monitor and fetch real-time sensor data
-- How to apply ML for predictive maintenance
-- How to deploy multi-channel bots using modern stacks
+### Deliverable
+Bot replies with accurate, real-time device state
 
 ---
 
-*Let’s build something smart, practical, and worth demoing.*
+## ⚙️ Week 5: Rule Engine
+
+**🎯 Goal:** Enable "if-this-then-that" logic in natural language.
+
+### Tasks
+- [ ] Build a `RuleManager` to store rules in DB
+- [ ] When sensor data arrives, check against rules
+- [ ] On match → trigger control command (MQTT publish)
+- [ ] Log rule evaluations and actions taken
+- [ ] Add endpoints to add/view/delete rules
+
+### Deliverable
+Rule created via chat → stored → enforced on live data
+
+---
+
+## 🔮 Week 6: Predictive Maintenance (Optional)
+
+**🎯 Goal:** Forecast failures based on sensor logs.
+
+### Tasks
+- [ ] Store time-series data in DB
+- [ ] Train ML model (Prophet, LSTM, or basic thresholding)
+- [ ] Create background job to run predictions
+- [ ] Alert user via chat if anomaly or risk detected
+- [ ] Explain prediction in human-friendly terms
+
+### Deliverable
+Bot: “⚠️ Pump in Zone C may fail in 8 days (temp spikes detected)”
+
+---
+
+## 🚀 Week 7: CI/CD + Deployment + Monitoring
+
+**🎯 Goal:** Finalize project for production deployment.
+
+### Tasks
+- [ ] Finalize `Dockerfile`, `.env.example`, `.gitignore`
+- [ ] Setup CI/CD with GitHub Actions (tests, Docker build, linting)
+- [ ] Deploy backend (Render / Railway / VPS)
+- [ ] Enable HTTPS, domain, and bot webhooks
+- [ ] Setup logging to file or external service (Sentry / Logtail)
+- [ ] Polish `README.md`, add architecture diagram, dev docs
+
+### Deliverable
+End-to-end working, deployed, production-grade Telegram IoT agent
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Tools |
+|-------|-------|
+| **Bot Platform** | Telegram Bot API (webhook) |
+| **Backend** | FastAPI, Python |
+| **AI/NLP** | OpenAI GPT-4, Prompt Engineering |
+| **IoT Messaging** | MQTT (Mosquitto), paho-mqtt |
+| **Database** | PostgreSQL / SQLite / Redis |
+| **Predictive (Optional)** | Prophet, Scikit-learn, TensorFlow |
+| **DevOps** | Docker, GitHub Actions, dotenv, Uvicorn, Nginx |
+| **Hosting** | Railway, Render, or VPS with HTTPS |
+"""
+
+
