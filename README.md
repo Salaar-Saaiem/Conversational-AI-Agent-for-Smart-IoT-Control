@@ -15,6 +15,10 @@
 
 ---
 
+---
+## <picture> <img src="https://github.com/Salaar-Saaiem/EV-Adoption-Forecasting/blob/25cf376c3e3e651dad009fde041aab5d2da213c0/Assets/520.gif?raw=true" alt="🐾" width="32" height="32"></picture> Architecture
+![Architecture](Assets/Architecture.png) <!-- Replace with your image path or URL -->
+
 ## <picture><img src="https://github.com/Salaar-Saaiem/EV-Adoption-Forecasting/blob/main/Assets/514.gif?raw=true" alt="🎯" width="32" height="32"></picture> Project Objectives
 
 - **Natural Language Control**  
